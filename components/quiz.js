@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import { Text, View, TouchableOpacity } from "react-native";
 import { connect } from "react-redux";
 import styled from "styled-components/native";
-import { NavigationActions } from 'react-navigation';
+import { NavigationActions } from "react-navigation";
 
 import Result from "./result";
 
@@ -130,14 +130,36 @@ class Quiz extends Component {
 
   goToDeckView = () => {
     const title = this.props.navigation.state.params.title;
-    const navigateAction = NavigationActions.navigate({
-      index: 0,
+    const resetAction = NavigationActions.reset({
+      index: 1,
       actions: [
+        NavigationActions.navigate({ routeName: 'Home'}),
         NavigationActions.navigate({ routeName: 'DeckView', params: {deckID: title}})
       ]
     });
-    this.props.navigation.dispatch(navigateAction);
-  }
+    this.props.navigation.dispatch(resetAction);
+  };
+
+  updateDynamicView = () => {
+    if (this.state.flip) {
+      return (
+        <TextView>
+          <DeckFont>
+            {this.state.questions[this.state.currentStep].answer}
+          </DeckFont>
+          <LinkFont onPress={this.toggleView}>Question</LinkFont>
+        </TextView>
+      );
+    }
+    return (
+      <TextView>
+        <DeckFont>
+          {this.state.questions[this.state.currentStep].question}
+        </DeckFont>
+        <LinkFont onPress={this.toggleView}>Answer</LinkFont>
+      </TextView>
+    );
+  };
 
   render() {
     if (this.state.startQuiz) {
@@ -145,24 +167,12 @@ class Quiz extends Component {
         <QuizView>
           <CountView>
             <CountFont>
-              {this.state.questions.length - (this.state.currentStep + 1)}/{this.state.questions.length}
+              {this.state.currentStep + 1}/{this.state.questions.length}
             </CountFont>
           </CountView>
-          {this.state.flip ? (
-            <TextView>
-              <DeckFont>
-                {this.state.questions[this.state.currentStep].answer}
-              </DeckFont>
-              <LinkFont onPress={this.toggleView}>Question</LinkFont>
-            </TextView>
-          ) : (
-            <TextView>
-              <DeckFont>
-                {this.state.questions[this.state.currentStep].question}
-              </DeckFont>
-              <LinkFont onPress={this.toggleView}>Answer</LinkFont>
-            </TextView>
-          )}
+
+          {this.updateDynamicView()}
+
           <ButtonContainer>
             <CorrectButton onPress={this.handleCorrectAnswer}>
               <ButtonFont>Correct</ButtonFont>

@@ -16,7 +16,7 @@ const ButtonView = styled.View`
   width: 100%;
 `;
 
-class AddCard extends React.Component {
+class AddQuiz extends React.Component {
 
 	static navigationOptions = ({ navigation }) => ({
     title: `${navigation.state.params.title}`,
@@ -73,4 +73,4 @@ const mapDispatchToProps = (dispatch) => ({
 	updateDeckWithNewCard: (newCard, title) => dispatch(addNewCard(newCard, title))
 });
 
-export default connect(null, mapDispatchToProps)(AddCard);
+export default connect(null, mapDispatchToProps)(AddQuiz);

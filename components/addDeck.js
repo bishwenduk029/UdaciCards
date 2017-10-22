@@ -35,7 +35,7 @@ const ButtonView = styled.View`
   width: 100%;
 `;
 
-class AddCard extends React.Component {
+class AddDeck extends React.Component {
 
   static navigationOptions = {
     header: null
@@ -56,8 +56,18 @@ class AddCard extends React.Component {
     let response = await saveNewDeckToNative(this.state.newDeckTitle);
     if (response) {
       this.props.addNewDeck(response);
-      this.navigateBack();
+      this.goToDeckView();
     }
+  };
+
+  goToDeckView = () => {
+    const resetAction = NavigationActions.reset({
+      index: 0,
+      actions: [
+        NavigationActions.navigate({ routeName: 'Home'})
+      ]
+    });
+    this.props.navigation.dispatch(resetAction);
   };
 
   render() {
@@ -87,4 +97,4 @@ const mapDispatchToProps = dispatch => ({
   addNewDeck: (newDeck) => dispatch(addNewDeck(newDeck))
 });
 
-export default connect(null, mapDispatchToProps)(AddCard);
+export default connect(null, mapDispatchToProps)(AddDeck);

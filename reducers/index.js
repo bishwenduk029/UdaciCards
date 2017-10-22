@@ -1,4 +1,4 @@
-import { ADD_NEW_CARD, ADD_NEW_DECK, RECEIVE_DECKS } from "../actions";
+import { ADD_NEW_CARD, ADD_NEW_DECK, RECEIVE_DECKS } from "../actions/types";
 
 function deck_updates(state = {}, action) {
   switch (action.type) {

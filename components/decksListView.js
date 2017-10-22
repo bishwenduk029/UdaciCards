@@ -1,6 +1,6 @@
 import React from "react";
 import { connect } from 'react-redux';
-import { View, TouchableOpacity , Text, AsyncStorage } from "react-native";
+import { View, TouchableOpacity , Text, FlatList, AsyncStorage } from "react-native";
 import styled from "styled-components/native";
 import { getDecks } from "../api";
 import { receiveDecks } from '../actions';
@@ -18,17 +18,15 @@ const DeckLayout = styled.TouchableOpacity`
   flex: 1;
   align-items: center;
   justify-content: center;
-  border-width: 2px;
+  border-width: 1px;
   border-color: grey;
   width: 100%;
   padding: 5%;
 `;
 
-const DecksContainer = styled.View`
+const DecksList = styled.FlatList`
   flex: 1;
-  align-items: center;
-  justify-content: center;
-  border: 2px solid black;
+  border: 1px solid black;
   width: 100%;
   background-color: papayawhip;
 `;
@@ -56,24 +54,30 @@ class DeckListView extends React.Component {
     }
   }
 
-  render() {
+  _keyExtractor = (item, index) => item;
+
+  _renderItem = ({item}) => {
     const { navigate } = this.props.navigation;
+    return (
+      <DeckLayout onPress={() => navigate('DeckView', {deckID: item})}>
+        <DeckTitle>
+          {this.props.decksObject[item].title}
+        </DeckTitle>
+        <QuestionCount>
+          {this.props.decksObject[item].questions.length} cards
+        </QuestionCount>
+      </DeckLayout>
+    );
+  }
+
+  render() {
     if (this.props.decksObject) {
       return (
-        <DecksContainer>
-          {Object.keys(this.props.decksObject).map(eachDeck => {
-            return (
-              <DeckLayout key={eachDeck} onPress={() => navigate('DeckView', {deckID: eachDeck})}>
-                <DeckTitle>
-                  {this.props.decksObject[eachDeck].title}
-                </DeckTitle>
-                <QuestionCount>
-                  {this.props.decksObject[eachDeck].questions.length} cards
-                </QuestionCount>
-              </DeckLayout>
-            );
-          })}
-        </DecksContainer>
+        <DecksList
+          data={Object.keys(this.props.decksObject)}
+          keyExtractor={this._keyExtractor}
+          renderItem={this._renderItem}
+        />
       );
     }
     return <View />;
@@ -81,6 +85,7 @@ class DeckListView extends React.Component {
 }
 
 const mapStateToProps = (state) => {
+  console.log(state);
   return {decksObject: state};
 };
 

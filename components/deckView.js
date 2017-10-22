@@ -65,9 +65,9 @@ class DeckView extends React.Component {
   }
 
   startUpTheQuiz = () => {
-     clearLocalNotification().then(setLocalNotification);
-     this.props.navigation.navigate("Quiz", { title: this.state.deck.title });
-  }
+    clearLocalNotification().then(setLocalNotification);
+    this.props.navigation.navigate("Quiz", { title: this.state.deck.title });
+  };
 
   render() {
     const { navigate } = this.props.navigation;
@@ -84,19 +84,21 @@ class DeckView extends React.Component {
             <ButtonView>
               <Button
                 onPress={() =>
-                  navigate("AddCard", { title: this.state.deck.title })}
+                  navigate("AddQuiz", { title: this.state.deck.title })}
                 title="ADD CARD"
                 color="#841584"
                 accessibilityLabel="Add a new question"
               />
             </ButtonView>
-            <ButtonView>
-              <Button
-                title="START QUIZ"
-                onPress={this.startUpTheQuiz}
-                accessibilityLabel="Let's Test your knowledge"
-              />
-            </ButtonView>
+            {this.state.deck.questions.length !== 0 && (
+              <ButtonView>
+                <Button
+                  title="START QUIZ"
+                  onPress={this.startUpTheQuiz}
+                  accessibilityLabel="Let's Test your knowledge"
+                />
+              </ButtonView>
+            )}
           </ActionContainer>
         </DeckLayout>
       );
@@ -105,7 +107,7 @@ class DeckView extends React.Component {
   }
 }
 
-const mapStateToProps = (state) => ({
+const mapStateToProps = state => ({
   decks: state
 });
 
